@@ -6,6 +6,13 @@ import re
 from datetime import datetime as dtdt
 import os
 
+def input_error(func):                
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return f"Error: {str(e)}"
+    return inner
 
 class BaseClass:
     def __init__(self, value):
@@ -66,6 +73,8 @@ class Record:
 class AddressBook(UserDict):  # Клас для зберігання та управління записами
     def __init__(self):
         self.data1 = []
+
+    @input_error
     def add_record(self, name, phones):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         kk = True
@@ -83,6 +92,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
         print (f'Контакт користувача додано.')
 
+    @input_error
     def add_birthday(self, name, birthday):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         for el in self.data1:
@@ -99,18 +109,23 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         if kk:
             print(f"Користувача {name} не знайдено: помилка вводу імені")
 
+    @input_error
     def list(self):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = 0
-        for value in self.data1:
-            i +=1
-            aa = value.get("name")
-            bb = value.get("phones")
-            string1 = ''
-            for el in bb:
-                string1 += el + " "
-            print(f"{i:2}. {aa:10} Телефон(и): {string1}")
+        if len(self.data1) > 0:
+            for value in self.data1:
+                i +=1
+                aa = value.get("name")
+                bb = value.get("phones")
+                string1 = ''
+                for el in bb:
+                    string1 += el + " "
+                print(f"{i:2}. {aa:10} Телефон(и): {string1}")
+        else:
+            print("Список пустий")
 
+    @input_error
     def find_birthday(self, name):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         for el in self.data1:
@@ -124,6 +139,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         if kk:
             print(f"Помилка вводу імені користувача або дані про день народження відсутні.")
 
+    @input_error
     def find_name(self, name):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         kk = False
@@ -143,6 +159,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         if kk !=True:
             print(f"Телефон користувача {name} не знайдено.")   
 
+    @input_error
     def remove_name(self, name):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = -1
@@ -171,6 +188,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
     #     else: 
     #         print(f"Користувача {name} не знайдено: помилка вводу імені") 
 
+    @input_error
     def change_phone(self, name, phon):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = 0
@@ -206,13 +224,12 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
             print(f"Користувача {name} не знайдено: помилка вводу імені")
             raise main()
 
+    @input_error
     def get_upcoming_birthdays(self):
         self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         tdate=dtdt.today().date() # беремо сьогоднішню дату
         birthdays=[] # створюємо список для результатів
         for user in self.data1: # перебираємо користувачів
-           
-
             if 'birthday' not in user:
                 continue
             bdate=user["birthday"] # отримуємо дату народження людини у вигляді рядка
@@ -254,9 +271,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
                 pickle.dump(self.data1, f)
         else:
             with open(filename, "rb") as f: 
-                # f = f.read()
                 self.data1= pickle.load(f)
-                print (f'   data1 = {self.data1}')
                 kk = True
             return kk
         
