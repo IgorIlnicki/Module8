@@ -212,7 +212,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
                             raise main()
                     else:
                         el["phones"] = [phon]
-                    self.erase_pic(r'D:\Projects\Module8\Module8\A1.pkl')
+                    # self.erase_pic(r'D:\Projects\Module8\Module8\A1.pkl')
                     self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
                     print(f"Телефон користувача {name} змінено на {phon}:")
                     kk = False
@@ -275,9 +275,9 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
                 kk = True
             return kk
         
-    def erase_pic(self, filename):
-        with open(filename, 'w') as file:
-            pickle.dump([], file)
+    # def erase_pic(self, filename):
+    #     with open(filename, 'w') as file:
+    #         pickle.dump([], file)
 
 def parse_input(user_input): #ввод команди та аргументів
     cmd, *args = user_input.split()
