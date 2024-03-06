@@ -1,15 +1,19 @@
 from collections import UserDict
 from functools import reduce
-import json
+import pickle
 import datetime as dt
 import re
 from datetime import datetime as dtdt
+import os
+
+
 class BaseClass:
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return str(self.value)
     
+
 class Phone(BaseClass):
     def __init__(self, phone):
         if len(phone) == 10:
@@ -18,8 +22,11 @@ class Phone(BaseClass):
             print(f'Формат телефону: {phone} задано невірно.')
             raise main()
         
+
 class Name(BaseClass):
     pass
+
+
 class Birthday(BaseClass):
     def __init__(self, birthday):
         super().__init__(birthday)
@@ -60,10 +67,11 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
     def __init__(self):
         self.data1 = []
     def add_record(self, name, phones):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
+        kk = True
         for el in self.data1:
             # print(f"   el = {el} el[name]= {el["name"]} name = {name}")
-            kk = True
+            
             if "name" in el:
                 if name==el["name"]:
                     el["phones"].append(phones)
@@ -72,27 +80,27 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         if kk:
             a = {"name": name, "phones": [phones]}
             self.data1.append(a)
-        self.write_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
         print (f'Контакт користувача додано.')
 
     def add_birthday(self, name, birthday):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         for el in self.data1:
             # print(f"   el = {el} el[name]= {el["name"]} name = {name}")
             if name==el["name"]:
                 a = {"birthday":birthday}
-                # print(f" birthday = {birthday}")
+                print(f" birthday = {birthday}")
                 el.update(a)
                 # print(f" el = {el}")
                 kk = False
-                self.write_json(r'D:\Projects\Module7\Module7-1\A1.json')
+                self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
                 print (f'День народження користувача додано.')
                 break
         if kk:
             print(f"Користувача {name} не знайдено: помилка вводу імені")
 
     def list(self):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = 0
         for value in self.data1:
             i +=1
@@ -104,7 +112,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
             print(f"{i:2}. {aa:10} Телефон(и): {string1}")
 
     def find_birthday(self, name):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         for el in self.data1:
             kk = True
             if "name" in el and "birthday" in el:
@@ -117,7 +125,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
             print(f"Помилка вводу імені користувача або дані про день народження відсутні.")
 
     def find_name(self, name):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         kk = False
         i = 0
         for el in self.data1:
@@ -136,7 +144,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
             print(f"Телефон користувача {name} не знайдено.")   
 
     def remove_name(self, name):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = -1
         kk = True
         for el in self.data1: 
@@ -147,8 +155,8 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
                         # print(f" self.data1.pop  = {self.data1}     s = {s}")
                         kk = False
                         print(f"Інформація про користувача {name} видалена") 
-                        self.erase_json(r'D:\Projects\Module7\Module7-1\A1.json')
-                        self.write_json(r'D:\Projects\Module7\Module7-1\A1.json')
+                        # self.erase_pic(r'D:\Projects\Module8\Module8\A1.pkl')
+                        self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
         if kk:
             print(f"Користувача {name} не знайдено: помилка вводу") 
 
@@ -164,7 +172,7 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
     #         print(f"Користувача {name} не знайдено: помилка вводу імені") 
 
     def change_phone(self, name, phon):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         i = 0
         kk = True
         for el in self.data1: 
@@ -186,8 +194,8 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
                             raise main()
                     else:
                         el["phones"] = [phon]
-                    self.erase_json(r'D:\Projects\Module7\Module7-1\A1.json')
-                    self.write_json(r'D:\Projects\Module7\Module7-1\A1.json')
+                    self.erase_pic(r'D:\Projects\Module8\Module8\A1.pkl')
+                    self.save_to_file(r'D:\Projects\Module8\Module8\A1.pkl')
                     print(f"Телефон користувача {name} змінено на {phon}:")
                     kk = False
                     i = 0
@@ -199,10 +207,14 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
             raise main()
 
     def get_upcoming_birthdays(self):
-        self.checit_json(r'D:\Projects\Module7\Module7-1\A1.json')
+        self.checit_pic(r'D:\Projects\Module8\Module8\A1.pkl')
         tdate=dtdt.today().date() # беремо сьогоднішню дату
         birthdays=[] # створюємо список для результатів
         for user in self.data1: # перебираємо користувачів
+           
+
+            if 'birthday' not in user:
+                continue
             bdate=user["birthday"] # отримуємо дату народження людини у вигляді рядка
             bdate=str(tdate.year)+bdate[4:] # Замінюємо рік на поточний
             bdate=dtdt.strptime(bdate, "%Y.%m.%d").date() # перетворюємо дату народження в об’єкт date
@@ -230,26 +242,27 @@ class AddressBook(UserDict):  # Клас для зберігання та упр
         else:
             print("На найближчий час днів народжень користувачів не передбачається")
 
-        # return birthdays
+    def save_to_file(self, filename):
+        with open(filename, "wb") as f:
+            pickle.dump(self.data1, f)
 
-    def write_json(self, filename):
-        with open(filename, 'w') as file:   # записуємо
-            json.dump(self.data1, file, indent=4)
-
-    def checit_json(self, filename):
-        with open(filename, 'r+') as file:
-            file_data = file.read().strip()
-            if not file_data: # якщо файл пустий
-                # print(f" Файл пустий")
-                kk = False
-            else:
-                self.data1 = json.loads(file_data)
-                # print (f'   data1 = {self.data1}')
+    def checit_pic(self, filename): 
+        if os.path.exists("A1.pkl") == False:
+            self.data1 = []
+            print(f"Файл пустий")
+            with open("A1.pkl", 'wb') as f:
+                pickle.dump(self.data1, f)
+        else:
+            with open(filename, "rb") as f: 
+                # f = f.read()
+                self.data1= pickle.load(f)
+                print (f'   data1 = {self.data1}')
                 kk = True
             return kk
-    def erase_json(self, filename):
+        
+    def erase_pic(self, filename):
         with open(filename, 'w') as file:
-            json.dump({}, file)
+            pickle.dump([], file)
 
 def parse_input(user_input): #ввод команди та аргументів
     cmd, *args = user_input.split()
